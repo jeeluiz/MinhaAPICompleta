@@ -1,4 +1,6 @@
-﻿namespace DevIO.Business.Models
+﻿using System.Text.Json.Serialization;
+
+namespace DevIO.Business.Models
 {
     public class Endereco : Entity
     {
@@ -12,6 +14,7 @@
         public string Estado { get; set; }
 
         /* EF Relation */
+        [JsonIgnore]
         public Fornecedor Fornecedor { get; set; }
     }
 }

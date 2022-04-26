@@ -17,6 +17,7 @@ namespace DevIOApi.ViewModel
         public int TipoFornecedor { get; set; }
         public EnderecoViewModel Endereco { get; set; }
         public bool Ativo { get; set; }
-        public IEnumerable<ProdutoViewModel> produtos { get; set; }
+
+        public IEnumerable<ProdutoViewModel> produtos { get; set; } = new List<ProdutoViewModel>();
     }
 }
