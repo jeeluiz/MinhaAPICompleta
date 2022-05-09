@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace DevIO.Business.Models
+﻿namespace DevIO.Business.Models
 {
     public class Produto : Entity
     {
@@ -14,7 +12,6 @@ namespace DevIO.Business.Models
         public bool Ativo { get; set; }
 
         /* EF Relations */
-        [JsonIgnore]
         public Fornecedor Fornecedor { get; set; }
     }
 }

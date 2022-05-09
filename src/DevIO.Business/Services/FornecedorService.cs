@@ -24,12 +24,12 @@ namespace DevIO.Business.Services
 
             if (_fornecedorRepository.Buscar(f => f.Documento == fornecedor.Documento).Result.Any())
             {
-                Notificar("Já existe um fornecedor com este documento infomado.");
+                Notificar("Já existe um fornecedor com este documento informado.");
                 return false;
             }
 
             await _fornecedorRepository.Adicionar(fornecedor);
-            return true;    
+            return true;
         }
 
         public async Task<bool> Atualizar(Fornecedor fornecedor)
@@ -69,7 +69,6 @@ namespace DevIO.Business.Services
             }
 
             await _fornecedorRepository.Remover(id);
-
             return true;
         }
 

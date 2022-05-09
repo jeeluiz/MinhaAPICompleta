@@ -21,6 +21,11 @@ namespace DevIO.Data.Repository
                 .OrderBy(p => p.Nome).ToListAsync();
         }
 
+        public Task<IEnumerable<Produto>> ObterProdutosFornecedores(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<IEnumerable<Produto>> ObterProdutosPorFornecedor(Guid fornecedorId)
         {
             return await Buscar(p => p.FornecedorId == fornecedorId);

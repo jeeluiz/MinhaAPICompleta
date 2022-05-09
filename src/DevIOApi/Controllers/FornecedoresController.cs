@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
+using DevIO.Api.ViewModels;
 using DevIO.Business.Intefaces;
 using DevIO.Business.Models;
-using DevIOApi.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevIOApi.Controllers
@@ -12,15 +12,18 @@ namespace DevIOApi.Controllers
         private readonly IFornecedorRepository _fornecedorRepository;
         private readonly IMapper _mapper;
         private readonly IFornecedorService _fornecedorService;
+        private readonly IEnderecoRepository _enderecoRepository;
 
-        public FornecedoresController(IFornecedorRepository fornecedorRepository, 
-            IMapper mapper, 
+        public FornecedoresController(IFornecedorRepository fornecedorRepository,
+            IMapper mapper,
             IFornecedorService fornecedorService,
-            INotificador notificador) : base(notificador)
+            INotificador notificador, 
+            IEnderecoRepository enderecoRepository) : base(notificador)
         {
             _fornecedorRepository = fornecedorRepository;
             _fornecedorService = fornecedorService;
             _mapper = mapper;
+            _enderecoRepository = enderecoRepository;
         }
 
         [HttpGet]
@@ -75,6 +78,24 @@ namespace DevIOApi.Controllers
 
             return CustomResponse(fornecedorViewlModel);
         }   
+
+        [HttpGet("obter-endereco/{id:guid}")]
+        public async Task<EnderecoViewModel> ObterEnderecoPorId(Guid id)
+        {
+            return _mapper.Map<EnderecoViewModel>(await _enderecoRepository.ObterPorId(id));
+        }
+
+        [HttpPut("atualizar-endereco/{id:guid}")]
+        public async Task<ActionResult<EnderecoViewModel>> AtualizarEndereco(Guid id, EnderecoViewModel enderecoViewModel)
+        {
+            if (id != enderecoViewModel.Id) return BadRequest();
+            if (!ModelState.IsValid) return BadRequest();
+
+            var endereco = _mapper.Map<Endereco>(enderecoViewModel);
+            await _fornecedorService.AtualizarEndereco(endereco);
+
+            return CustomResponse(enderecoViewModel);
+        }
 
         public async Task<FornecedorViewModel> ObterFonecedorProdutosEndereco(Guid id)
         {

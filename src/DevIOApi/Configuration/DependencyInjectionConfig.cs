@@ -4,7 +4,7 @@ using DevIO.Business.Services;
 using DevIO.Data.Context;
 using DevIO.Data.Repository;
 
-namespace DevIOApi.Configuration
+namespace DevIO.Api.Configuration
 {
     public static class DependencyInjectionConfig
     {
@@ -12,16 +12,14 @@ namespace DevIOApi.Configuration
         {
             services.AddScoped<MeuDbContext>();
             services.AddScoped<IProdutoRepository, ProdutoRepository>();
-            services.AddScoped<IEnderecoRepository, EnderecoRepository>();
             services.AddScoped<IFornecedorRepository, FornecedorRepository>();
+            services.AddScoped<IEnderecoRepository, EnderecoRepository>();
 
             services.AddScoped<INotificador, Notificador>();
             services.AddScoped<IFornecedorService, FornecedorService>();
             services.AddScoped<IProdutoService, ProdutoService>();
 
-
             return services;
         }
-
     }
 }
