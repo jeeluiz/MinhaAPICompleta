@@ -16,9 +16,12 @@ builder.Services.AddDbContext<MeuDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddAuthentication();
 builder.Services.AddMvc();
 builder.Services.ResolveDependencies();
 builder.Services.AddIdentityConfiguiration(builder.Configuration);
