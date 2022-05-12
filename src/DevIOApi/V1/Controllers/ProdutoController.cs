@@ -2,13 +2,17 @@
 using DevIO.Api.ViewModels;
 using DevIO.Business.Intefaces;
 using DevIO.Business.Models;
+using DevIOApi.Controllers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DevIOApi.Controllers
+namespace DevIOApi.V1.Controllers
 {
     [Authorize]
-    [Route("api/fonecedores")]
+    [ApiVersion("1.0")]
+    //[Route("api/v{version:apiVersion}/produtos")]
+    [Route("api/v1/produtos")]
+
     public class ProdutoController : MainController
     {
         private readonly IMapper _mapper;
@@ -29,7 +33,7 @@ namespace DevIOApi.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet]
+        [HttpGet("todos")]
         public async Task<IEnumerable<ProdutoViewModel>> ObterTodos(Guid id)
         {
             return _mapper.Map<IEnumerable<ProdutoViewModel>>(await _produtoRepository.ObterProdutosFornecedores(id));
@@ -44,7 +48,7 @@ namespace DevIOApi.Controllers
 
             return produtoViewModel;
         }
-        
+
         [HttpGet]
         public async Task<ProdutoViewModel> ObterProduto(Guid id)
         {
@@ -82,14 +86,14 @@ namespace DevIOApi.Controllers
         private bool UploadArquivo(string arquivo, string imgNome)
         {
             var imageDataByteArray = Convert.FromBase64String(arquivo);
-            
-            if(string.IsNullOrEmpty(arquivo))
+
+            if (string.IsNullOrEmpty(arquivo))
             {
                 NotificarErro("Forneça uma imagem para este produto!");
                 return false;
             }
 
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(),"wwwroot/imagens", imgNome);
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/imagens", imgNome);
 
             if (System.IO.File.Exists(filePath))
             {

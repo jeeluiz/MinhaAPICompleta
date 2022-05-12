@@ -2,15 +2,17 @@
 using DevIO.Api.ViewModels;
 using DevIO.Business.Intefaces;
 using DevIO.Business.Models;
+using DevIOApi.Controllers;
 using DevIOApi.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DevIOApi.Controllers
+namespace DevIOApi.V1.Controllers
 {
     [Authorize]
     [ApiVersion("1.0")]
-    [Route("api/v{version:apiVersion}/fornecedores")]
+    //[Route("api/v{version:apiVersion}/fornecedores")]
+    [Route("api/v1/fornecedores")]
     public class FornecedoresController : MainController
     {
         private readonly IFornecedorRepository _fornecedorRepository;
@@ -21,7 +23,7 @@ namespace DevIOApi.Controllers
         public FornecedoresController(IFornecedorRepository fornecedorRepository,
             IMapper mapper,
             IFornecedorService fornecedorService,
-            INotificador notificador, 
+            INotificador notificador,
             IEnderecoRepository enderecoRepository,
             IUser user) : base(notificador, user)
         {
@@ -45,14 +47,14 @@ namespace DevIOApi.Controllers
         {
             var fornecedor = await ObterFonecedorProdutosEndereco(id);
 
-            if(fornecedor == null) return NotFound();
+            if (fornecedor == null) return NotFound();
 
             return fornecedor;
         }
 
-        [ClaimsAuthorize("Fornecedor","Adicionar")]
+        [ClaimsAuthorize("Fornecedor", "Adicionar")]
         [HttpPost]
-        public async Task<ActionResult<FornecedorViewModel>> Adicionar([FromBody]FornecedorViewModel fornecedorViewModel)
+        public async Task<ActionResult<FornecedorViewModel>> Adicionar([FromBody] FornecedorViewModel fornecedorViewModel)
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
@@ -82,10 +84,10 @@ namespace DevIOApi.Controllers
 
             if (fornecedorViewlModel == null) return NotFound();
 
-             await _fornecedorService.Remover(id);
+            await _fornecedorService.Remover(id);
 
             return CustomResponse(fornecedorViewlModel);
-        }   
+        }
 
         [HttpGet("obter-endereco/{id:guid}")]
         public async Task<EnderecoViewModel> ObterEnderecoPorId(Guid id)

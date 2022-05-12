@@ -11,10 +11,12 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace DevIOApi.Configuration
+namespace DevIOApi.V1.Controllers
 {
-    [Route("api")]
-    [DisableCors]
+    [ApiVersion("2.0")]
+    [ApiVersion("1.0", Deprecated = true)]
+    //[Route("api/v{version:apiVersion}")]
+    [Route("api/v1/auth")]
     public class AuthController : MainController
     {
         private readonly SignInManager<IdentityUser> _signInManeger;
@@ -22,8 +24,8 @@ namespace DevIOApi.Configuration
         private readonly AppSettings _appSettings;
 
         public AuthController(INotificador notificador, SignInManager<IdentityUser> signInManeger,
-            UserManager<IdentityUser> userManager, 
-            IOptions<AppSettings> appSettings, 
+            UserManager<IdentityUser> userManager,
+            IOptions<AppSettings> appSettings,
             IUser user) : base(notificador, user)
         {
             _signInManeger = signInManeger;
@@ -33,7 +35,7 @@ namespace DevIOApi.Configuration
 
         [HttpPost("nova-conta")]
         [EnableCors("Development")]
-        public async Task<IActionResult> Registrar([FromBody]RegisterUserViewModel registrarUser)
+        public async Task<IActionResult> Registrar([FromBody] RegisterUserViewModel registrarUser)
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
@@ -78,7 +80,7 @@ namespace DevIOApi.Configuration
             return CustomResponse(loginUser);
         }
 
-        private async Task<LoginResponseViewModel> GerarJwt(string email )
+        private async Task<LoginResponseViewModel> GerarJwt(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
             var claims = await _userManager.GetClaimsAsync(user);
@@ -89,7 +91,7 @@ namespace DevIOApi.Configuration
             claims.Add(new Claim(type: JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
             claims.Add(new Claim(type: JwtRegisteredClaimNames.Nbf, ToUnixEpochDate(DateTime.UtcNow).ToString()));
             claims.Add(new Claim(type: JwtRegisteredClaimNames.Iat, ToUnixEpochDate(DateTime.UtcNow).ToString(), ClaimValueTypes.Integer64));
-            foreach(var userRole in userRoles)
+            foreach (var userRole in userRoles)
             {
                 claims.Add(new Claim(type: "role", value: userRole));
             }
@@ -108,7 +110,7 @@ namespace DevIOApi.Configuration
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Key), algorithm: SecurityAlgorithms.HmacSha256Signature)
             });
 
-            var encodedToken =  tokenHandler.WriteToken(token);
+            var encodedToken = tokenHandler.WriteToken(token);
             var response = new LoginResponseViewModel
             {
                 AccessToken = encodedToken,
@@ -117,14 +119,14 @@ namespace DevIOApi.Configuration
                 {
                     Id = user.Id,
                     Email = user.Email,
-                    Claims = claims.Select(c => new ClaimViewModel{Type = c.Type, Value = c.Value})
+                    Claims = claims.Select(c => new ClaimViewModel { Type = c.Type, Value = c.Value })
                 }
             };
             return response;
         }
 
-        private object ToUnixEpochDate(DateTime date) 
-            =>(long)Math.Round((date.ToUniversalTime() - new DateTimeOffset(year:1970, month:1, day:1, hour:0, minute:0, second:0, offset:TimeSpan.Zero)).TotalSeconds);
-        
+        private object ToUnixEpochDate(DateTime date)
+            => (long)Math.Round((date.ToUniversalTime() - new DateTimeOffset(year: 1970, month: 1, day: 1, hour: 0, minute: 0, second: 0, offset: TimeSpan.Zero)).TotalSeconds);
+
     }
 }
