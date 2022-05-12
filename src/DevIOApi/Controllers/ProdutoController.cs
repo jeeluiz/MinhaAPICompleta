@@ -20,7 +20,8 @@ namespace DevIOApi.Controllers
             IMapper mapper,
             IProdutoRepository produtoRepository,
             INotificador notificador,
-            IEnderecoRepository enderecoRepository) : base(notificador)
+            IEnderecoRepository enderecoRepository,
+            IUser user) : base(notificador, user)
         {
             _produtoRepository = _produtoRepository;
             _produtoService = _produtoService;
