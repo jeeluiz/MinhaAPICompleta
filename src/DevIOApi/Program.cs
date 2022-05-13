@@ -28,10 +28,6 @@ builder.Services.AddMvc();
 builder.Services.ResolveDependencies();
 builder.Services.AddIdentityConfiguiration(builder.Configuration);
 
-builder.Services.AddSwaggerGen(options =>
-{
-    options.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
-});
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
@@ -56,6 +52,7 @@ else
     app.UseHsts();
 }
 
+app.UseCors();
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
